@@ -1,18 +1,13 @@
 
-alp.index.lm <- function(id.alp, i){
+# return index of alp, model coefficients in the linear model
+alp.index.lm <- function(map, i){
   
-  st <- id.alp$start[i]
-  ed <- id.alp$end[i]
-  
-  if(st > ed){
-    stop('debug alp.index.lm')
-  }
-  
-  if(st == ed){ # all coefficients are known for this model, no alp except a tau
+  # a logistic regression model, all coef given (inc intercept), no alp for this model
+  if(any(is.na(map$alp[[i]]))){
     return(NULL)
   }
   
-  (st + 1):ed
+  map$alp[[i]]
   
 }
 

@@ -1,13 +1,17 @@
 
 
-reorganize <- function(fit, para.id, family){
+reorganize <- function(fit, map, family){
   
   if(family == 'gaussian'){
-    fit <- reorganize.lm(fit, para.id)
+    fit <- reorganize.lm(fit, map)
   }
   
   if(family == 'binomial'){
-    fit <- reorganize.lo(fit, para.id)
+    fit <- reorganize.lo(fit, map)
+  }
+  
+  if(family == 'case-control'){
+    fit <- reorganize.cc(fit, map)
   }
   
   fit

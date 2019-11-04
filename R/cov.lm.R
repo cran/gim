@@ -1,93 +1,19 @@
 
 
-cov.lm <- function(para, para.id, data, model, nsample, V, bet0, outcome){
-  
-  data$'(Intercept)' <- 1
-  
-  g <- gfunction.lm(para, para.id, data)
-  g.the <- gfunction.the.lm(para, para.id, data)
-  g.alp <- gfunction.alp.lm(para, para.id, data)
-  g.bet <- gfunction.bet.lm(para, para.id, data)
-  
-  id.lam <- para.id$id.lam
-  id.the <- para.id$id.the
-  id.alp <- para.id$id.alp
-  id.bet <- para.id$id.bet
-  
-  nmodel <- nrow(id.bet)
-  nlam <- max(id.lam)
-  n <- nrow(data)
-  
-  lam <- para[id.lam$start[1]:id.lam$end[1]]
-  pr <- as.vector(1/(1+g %*% lam))
-  pr <- pr/sum(pr)
-  
-  J.tt <- -(t(g) %*% (g * pr))
-  
-  nthe <- length(g.the)
-  J.tthe <- matrix(0, nrow = nlam, ncol = nthe)
-  for(i in 1:nthe){
-    J.tthe[, i] <- t(g.the[[i]]) %*% pr
-  }
-  
-  nalp <- length(g.alp)
-  J.talp <- matrix(0, nrow = nlam, ncol = nalp)
-  for(i in 1:nalp){
-    J.talp[, i] <- t(g.alp[[i]]) %*% pr
-  }
-  
-  nbet <- length(g.bet)
-  J.tbet <- matrix(0, nrow = nlam, ncol = nbet)
-  for(i in 1:nbet){
-    J.tbet[, i] <- t(g.bet[[i]]) %*% pr
-  }
-  
-  J.the <- matrix(0, nrow = nthe, ncol = nthe)
-  sigma <- para[id.the$start[1]]
-  the <- para[(id.the$start[1]+1):id.the$end[1]]
-  fx <- as.matrix(data[, names(the), drop = FALSE])
-  J.the[1, 1] <- 1/2/sigma
-  J.the[-1, -1] <- t(fx) %*% (fx * pr)
-  J.the <- 1/sigma * J.the
-  
-  suppressMessages(Sigma0 <- Sigma0.lm(para, para.id, data, model, nsample, outcome))
-  J.bet <- solve(Sigma0)/n
-  #J.bet <- solve(V)/n
-  
-  np <- length(para)
-  Jv <- matrix(0, nrow = np, ncol = np)
-  Iv <- matrix(0, nrow = np, ncol = np)
-  
-  Jv[1:nlam, 1:nlam] <- J.tt
-  Jv[1:nlam, min(id.the):max(id.the)] <- J.tthe
-  Jv[min(id.the):max(id.the), 1:nlam] <- t(J.tthe)
-  Jv[1:nlam, min(id.alp):max(id.alp)] <- J.talp
-  Jv[min(id.alp):max(id.alp), 1:nlam] <- t(J.talp)
-  Jv[1:nlam, min(id.bet):max(id.bet)] <- J.tbet
-  Jv[min(id.bet):max(id.bet), 1:nlam] <- t(J.tbet)
-  Jv[min(id.the):max(id.the), min(id.the):max(id.the)] <- J.the
-  Jv[min(id.bet):max(id.bet), min(id.bet):max(id.bet)] <- J.bet
-  
-  Iv[1:nlam, 1:nlam] <- -J.tt
-  Iv[min(id.the):max(id.the), min(id.the):max(id.the)] <- J.the
-  Iv[min(id.bet):max(id.bet), min(id.bet):max(id.bet)] <- J.bet
-  #Iv[min(id.bet):max(id.bet), min(id.bet):max(id.bet)] <- n * J.bet %*% Sigma0 %*% J.bet
-  
-  vcov <- solve(Jv) %*% Iv %*% solve(Jv)/n
-  
-  vcov
+cov.lm <- function(para, map, data, ref, model, nsample, V, bet0, outcome){
   
   #################
   # seems like this sample version is better
-  # so abandent everything before this line
   #################
   
-  Jv0 <- -hess.lm(para, para.id, data, solve(V), bet0, outcome)/n
+  n <- nrow(data)
+  np <- length(para)
+  Jv0 <- -hess.lm(para, map, data, ref, solve(V), bet0, outcome)/n
   
   Iv0 <- matrix(0, nrow = np, ncol = np)
-  Iv0[1:nlam, 1:nlam] <- -Jv0[1:nlam, 1:nlam]
-  Iv0[min(id.the):max(id.the), min(id.the):max(id.the)] <- Jv0[min(id.the):max(id.the), min(id.the):max(id.the)]
-  Iv0[min(id.bet):max(id.bet), min(id.bet):max(id.bet)] <- Jv0[min(id.bet):max(id.bet), min(id.bet):max(id.bet)]
+  Iv0[map$lam, map$lam] <- -Jv0[map$lam, map$lam]
+  Iv0[map$the, map$the] <- Jv0[map$the, map$the]
+  Iv0[map$all.bet, map$all.bet] <- Jv0[map$all.bet, map$all.bet]
   vcov0 <- solve(Jv0) %*% Iv0 %*% solve(Jv0)/n
   
   vcov0

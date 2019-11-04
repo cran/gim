@@ -1,32 +1,22 @@
 
 
-obj.lo <- function(para, para.id, data, inv.V, bet0, outcome){
+obj.lo <- function(para, map, data, ref, inv.V, bet0, outcome){
   
   data$'(Intercept)' <- 1
   
-  id.lam <- para.id$id.lam
-  id.the <- para.id$id.the
-  id.alp <- para.id$id.alp
-  id.bet <- para.id$id.bet
+  nmodel <- length(map$bet)
   
-  nmodel <- nrow(id.bet)
-  nt <- max(id.lam)
-  
-  lam <- para[id.lam$start[1]:id.lam$end[1]]
-  
-  the <- para[id.the$start[1]:id.the$end[1]]
+  lam <- para[map$lam]
+  the <- para[map$the]
   fx <- as.matrix(data[, names(the), drop = FALSE])
   y <- data[, outcome]
   lin <- as.vector(fx %*% the)
   
-  g <- gfunction.lo(para, para.id, data)
+  g <- gfunction.lo(para, map, ref)
   
   pr <- as.vector(1/(1+g %*% lam))
   
-  np <- length(para)
-  n <- nrow(data)
-  
-  bet <- para[min(id.bet):max(id.bet)]
+  bet <- para[map$all.bet]
   
   plogL <- sum(y*lin) - sum(log(1+exp(lin))) + sum(log(pr)) -1/2 * as.vector(t(bet0 - bet) %*% inv.V %*% (bet0 - bet))
   names(plogL) <- NULL
