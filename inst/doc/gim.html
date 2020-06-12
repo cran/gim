@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Han Zhang" />
+
+<meta name="date" content="2020-06-12" />
+
+<title>Generalized Integration Model</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Generalized Integration Model</h1>
+<h4 class="author">Han Zhang</h4>
+<h4 class="date">2020-06-12</h4>
+
+
+
+<p>The <code>gim</code> package is used to integrate summary data reported to literature (<strong>external studies</strong>) with your own raw data (<strong>internal study</strong>). In this short tutorial, I will use examples to show various applications with <code>gim</code>. To use <code>gim</code>, you will have to find out what models are fitted for those external summary data, while it is up to you to chose the model to be fitted on your own internal data. Keep in mind that the parameters in the model fitted on internal data are of interest in <code>gim</code> analysis.</p>
+<div id="flexible-input" class="section level2">
+<h2>Flexible Input</h2>
+<p>The <code>gim</code> package supports flexible ways to specify models fitted for the internal data and those of external studies. We use <code>formula</code> to specify a linear or logistic regression model for the internal raw data, and <strong>consider this model as the true underlying model</strong>. This is important as <code>gim</code> will calculate the standard error of its estimations under this model. Also, only the estimations of the coefficients in this model are of your interest. Currently, <code>formula</code> accept arithmetic expressions, e.g., <code>log(x)</code>, or other operators like <code>*</code> for interactions. For example, <code>y~as.factor(x1) * I(x2 &gt;0)-1</code> is a valid formula for <code>gim</code>.</p>
+<p>Three options are supported for <code>family</code>: <code>gaussian</code> for linear regression; <code>binomial</code> for logistic regression fitted on random sample; <code>case-control</code> for logistic regression fitted on case-control data. Note that the case/control ratio can vary among case-control datasets. It is always benefitial to use <code>case-control</code> over <code>binomial</code> even if your data for binary outcome is indeed a random sample from the population.</p>
+<p>Your individual-level internal data should be passed through <code>data</code>. Note that every variable in <code>formula</code> should be present in <code>data</code>. <code>gim</code> discards incomplete samples from analysis.</p>
+<p><code>gim</code> uses <code>model</code>, a list of list, to organize summary information from external studies. Please use <code>?gim</code> for more details of <code>model</code>. A rule of thumb is that if a set of coefficients are estimated from a fitted model, then one should pack them as an element into <code>model</code>. Two fitted external models could use the same or partially overlapping datasets, however, estimations from these two models should be stored as two separate elements in <code>model</code> as you do have fitted two models. Please refer to examples below.</p>
+<p>External studies may or may not share data when models being fitted. If summary data from <code>k</code> external models are stored in <code>model</code>, then <code>nsample</code> should be a <code>k</code> by <code>k</code> matrix, with its <code>(i,j)</code> element representing the numbers of shared samples being used when fitting the two models. If models are fitted on independent datasets, then the corresponding elements in <code>nsample</code> should be zeros. The diagonal elements are numbers of samples used in fitting each of the external models. When analyzing case-control data, we have to specify <code>ncase</code> and <code>nctrl</code> instead, and leave <code>nsample</code> to be <code>NULL</code>, the default value.</p>
+<p><code>gim</code> is able to handle the senario when internal and external studies are conducted on different populations. In that case, an extra reference set is required for making a valid inference on model parameters, otherwise, as shown in our paper, the estimation could be biased and the standard error of estimation may be underestimated. The reference set <code>ref</code> is a data frame consisting variables used in <code>formula</code> and <code>model[[i]]$formula</code>. Unused variables in <code>ref</code> would be discarded automatically. <code>gim</code> does not assume an outcome variable is present in <code>ref</code>, that is what a <em>reference</em> means. Such a reference set is used to estimate the distribution of covariates in the external population.</p>
+<p>It is tricky to determine if <code>data</code> or <code>ref</code> contain <strong>ALL</strong> necessary variables when invoking <code>gim</code>. If you encounter error message when calling <code>gim</code>, try</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glm</span>(formula, family, data)</code></pre></div>
+<p>and</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>(m <span class="cf">in</span> model){
+  <span class="kw">glm</span>(m<span class="op">$</span>formula, family, data)
+}</code></pre></div>
+<p>to find out a full list of those variables. You may also add an artificial outcome into <code>ref</code> to replace <code>data</code> in codes above. If you still encounter any error message when running those codes, then very likely some variables are missing in <code>data</code> or <code>ref</code>.</p>
+<p><code>?gim</code> provides a good example showing how to use <code>gim</code>. Here we give some more specified examples that could be of interest in practice.</p>
+</div>
+<div id="example-1-integrating-population-characteristics" class="section level2">
+<h2>Example 1: Integrating Population Characteristics</h2>
+<p>Many research articles in epidemiology usually provide a table in which two-way contingency tables are listed for outcome versus several population characteristics. For example, assume that in a paper about cancer, it may gives the following table</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N &lt;-<span class="st"> </span><span class="dv">800</span>
+<span class="kw">set.seed</span>(<span class="dv">0</span>)
+sex &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">'F'</span>, <span class="st">'M'</span>), N, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">4</span>, .<span class="dv">6</span>))
+snp &lt;-<span class="st"> </span><span class="kw">rbinom</span>(N, <span class="dv">2</span>, <span class="kw">c</span>(.<span class="dv">4</span>, .<span class="dv">3</span>, .<span class="dv">3</span>))
+age &lt;-<span class="st"> </span><span class="kw">runif</span>(N, <span class="dv">20</span>, <span class="dv">60</span>)
+pr &lt;-<span class="st"> </span><span class="kw">plogis</span>(.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">5</span> <span class="op">*</span><span class="st"> </span><span class="kw">I</span>(sex <span class="op">==</span><span class="st"> 'F'</span>) <span class="op">+</span><span class="st"> </span>.<span class="dv">5</span> <span class="op">*</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">-</span><span class="st"> </span>.<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>snp)
+cancer &lt;-<span class="st"> </span><span class="kw">rbinom</span>(N, <span class="dv">1</span>, pr)
+ext &lt;-<span class="st"> </span><span class="kw">data.frame</span>(cancer, sex, snp, age, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right"></th>
+<th align="left"></th>
+<th>Case</th>
+<th align="center">Control</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Sex</td>
+<td align="left">M</td>
+<td>261</td>
+<td align="center">222</td>
+</tr>
+<tr class="even">
+<td align="right"></td>
+<td align="left">F</td>
+<td>216</td>
+<td align="center">101</td>
+</tr>
+<tr class="odd">
+<td align="right">Age</td>
+<td align="left">&lt; 30</td>
+<td>127</td>
+<td align="center">92</td>
+</tr>
+<tr class="even">
+<td align="right"></td>
+<td align="left">[30,50]</td>
+<td>214</td>
+<td align="center">159</td>
+</tr>
+<tr class="odd">
+<td align="right"></td>
+<td align="left">&gt; 50</td>
+<td>136</td>
+<td align="center">72</td>
+</tr>
+<tr class="even">
+<td align="right">SNP</td>
+<td align="left">0</td>
+<td>241</td>
+<td align="center">133</td>
+</tr>
+<tr class="odd">
+<td align="right"></td>
+<td align="left">1 or 2</td>
+<td>236</td>
+<td align="center">190</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the raw dataset <code>ext</code> could not be obtained from literature. Instead, one can only calculate univariate odds ratio of sex based on numbers in the table. For age, the odds ratios are subject to indicators <code>I(age &lt; 30)</code> and <code>I(age &gt; 50)</code>. For SNP, the best we can have is the odds ratio in a dominant model. Statistically, these are equivalent to fitting univariate models on <code>ext</code> as follows</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m1 &lt;-<span class="st"> </span><span class="kw">glm</span>(cancer <span class="op">~</span><span class="st"> </span>sex, <span class="dt">data =</span> ext, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+m2 &lt;-<span class="st"> </span><span class="kw">glm</span>(cancer <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>), <span class="dt">data =</span> ext, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)
+m3 &lt;-<span class="st"> </span><span class="kw">glm</span>(cancer <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(snp <span class="op">==</span><span class="st"> </span><span class="dv">0</span>), <span class="dt">data =</span> ext, <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)</code></pre></div>
+<p>Sometimes even the contingency tables are also inaccessible, but only the odds ratios are mentioned in text of articles. We consider a more complicated senario in this example.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m2)<span class="op">$</span>coef
+<span class="co">#&gt;                  Estimate Std. Error   z value    Pr(&gt;|z|)</span>
+<span class="co">#&gt; (Intercept)     0.2970718  0.1047006 2.8373472 0.004549012</span>
+<span class="co">#&gt; I(age &lt; 30)TRUE 0.0253267  0.1723537 0.1469461 0.883174576</span>
+<span class="co">#&gt; I(age &gt; 50)TRUE 0.3389170  0.1794548 1.8885921 0.058946501</span></code></pre></div>
+<p>We can see that only <code>I(age &gt; 50)</code> shows significant association with cancer, researchers may only report its log odds ratio 0.34 in their articles. We thus illustrate <code>gim</code> by ignoring estimation of intercept in all the three models above. We also assume that only the log odds ratio of <code>I(age &gt; 50)</code> is given to <code>gim</code>, while that of <code>I(age &lt; 30)</code> is not. We create <code>model</code> as</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">formula =</span> <span class="st">'cancer ~sex'</span>, 
+               <span class="dt">info =</span> <span class="kw">data.frame</span>(<span class="dt">var =</span> <span class="kw">names</span>(<span class="kw">coef</span>(m1))[<span class="op">-</span><span class="dv">1</span>], 
+                                 <span class="dt">bet =</span> <span class="kw">coef</span>(m1)[<span class="op">-</span><span class="dv">1</span>], <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>))
+model2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">formula =</span> <span class="st">'cancer~I(age&lt; 30) + I(age &gt; 50)'</span>, 
+               <span class="dt">info =</span> <span class="kw">data.frame</span>(<span class="dt">var =</span> <span class="kw">names</span>(<span class="kw">coef</span>(m2))[<span class="dv">3</span>], 
+                                 <span class="dt">bet =</span> <span class="kw">coef</span>(m2)[<span class="dv">3</span>], <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>))
+model3 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">formula =</span> <span class="st">'cancer ~ I(snp == 0)'</span>, 
+               <span class="dt">info =</span> <span class="kw">data.frame</span>(<span class="dt">var =</span> <span class="kw">names</span>(<span class="kw">coef</span>(m3))[<span class="op">-</span><span class="dv">1</span>], 
+                                 <span class="dt">bet =</span> <span class="kw">coef</span>(m3)[<span class="op">-</span><span class="dv">1</span>], <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>))
+model &lt;-<span class="st"> </span><span class="kw">list</span>(model1, model2, model3)
+model2
+<span class="co">#&gt; $formula</span>
+<span class="co">#&gt; [1] &quot;cancer~I(age&lt; 30) + I(age &gt; 50)&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $info</span>
+<span class="co">#&gt;                             var      bet</span>
+<span class="co">#&gt; I(age &gt; 50)TRUE I(age &gt; 50)TRUE 0.338917</span></code></pre></div>
+<p>For each external model, <code>gim</code> needs to know the model used to fit external data (<code>model[[i]]$formula</code>), as well as the estimation of coefficients (<code>model[[i]]$info</code>). In this example, some coefficients (e.g. intercept and <code>I(age &lt; 30)</code>) are estimated but not given to <code>gim</code>. This is a sweet spot of <code>gim</code> that can work with partial summary information quite well. Note that it is Since all three external models are fitted on the same dataset, we specify <code>nsample</code> for the three fitted models as</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nsample &lt;-<span class="st"> </span><span class="kw">matrix</span>(N, <span class="dv">3</span>, <span class="dv">3</span>)</code></pre></div>
+<p>If we would consider external studies as case-control studies, which is what we recommend, we could instead specify</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ncase &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sum</span>(cancer), <span class="dv">3</span>, <span class="dv">3</span>)
+nctrl &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">sum</span>(<span class="op">!</span>cancer), <span class="dv">3</span>, <span class="dv">3</span>)</code></pre></div>
+<p>and leave <code>nsample</code> to be <code>NULL</code>.</p>
+<p>Now we collect samples from an internal study. Note that we modify the model by using a differnt intercept 0.3 while keeping all other coefficients remain the same as before, because we want a case-control data of a different case/control ratio.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">300</span>
+<span class="kw">set.seed</span>(<span class="dv">1</span>)
+sex &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">'F'</span>, <span class="st">'M'</span>), n, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">4</span>, .<span class="dv">6</span>))
+snp &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dv">2</span>, <span class="kw">c</span>(.<span class="dv">4</span>, .<span class="dv">3</span>, .<span class="dv">3</span>))
+age &lt;-<span class="st"> </span><span class="kw">runif</span>(n, <span class="dv">20</span>, <span class="dv">60</span>)
+pr &lt;-<span class="st"> </span><span class="kw">plogis</span>(.<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">5</span> <span class="op">*</span><span class="st"> </span><span class="kw">I</span>(sex <span class="op">==</span><span class="st"> 'F'</span>) <span class="op">+</span><span class="st"> </span>.<span class="dv">5</span> <span class="op">*</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">-</span><span class="st"> </span>.<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>snp)
+cancer &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dv">1</span>, pr)
+smoking &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>), n, <span class="ot">TRUE</span>, <span class="kw">c</span>(.<span class="dv">3</span>, .<span class="dv">7</span>))
+int &lt;-<span class="st"> </span><span class="kw">data.frame</span>(cancer, sex, snp, age, smoking, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p>In this internal study, we also collect a binary <code>smoking</code>, although it does not affect the cancer risk in our setting. Now we can integrate internal data <code>int</code> with external <code>model</code>. Let’s assume that, based on some knowledges, we believe that a single cutoff for age at 40 should be used in the underlying model instead 30 and 50 used in external studies, and an additive model for SNP would be more of interest. We also want to investigate potential effect of smoking status. So we assume the underlying true model would be <code>cancer ~ I(sex == &quot;F&quot;) + I(age &gt; 40) + snp + smoking</code>, and invoke <code>gim</code> as follows</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gim)
+fit1 &lt;-<span class="st"> </span><span class="kw">gim</span>(cancer <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(sex <span class="op">==</span><span class="st"> &quot;F&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">+</span><span class="st"> </span>snp <span class="op">+</span><span class="st"> </span>smoking, 
+            <span class="st">&quot;case-control&quot;</span>, int, model, 
+            <span class="dt">ncase =</span> ncase, <span class="dt">nctrl =</span> nctrl)
+<span class="kw">summary</span>(fit1)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; gim.default(formula = cancer ~ I(sex == &quot;F&quot;) + I(age &gt; 40) + </span>
+<span class="co">#&gt;     snp + smoking, family = &quot;case-control&quot;, data = int, model = model, </span>
+<span class="co">#&gt;     ncase = ncase, nctrl = nctrl)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;                   Estimate Std. Error z value  Pr(&gt;|z|)    </span>
+<span class="co">#&gt; (Intercept)       -0.23729    0.15403 -1.5405 0.1234325    </span>
+<span class="co">#&gt; I(sex == &quot;F&quot;)TRUE  0.55741    0.14218  3.9204 8.839e-05 ***</span>
+<span class="co">#&gt; I(age &gt; 40)TRUE    0.67326    0.20335  3.3109 0.0009301 ***</span>
+<span class="co">#&gt; snp               -0.31230    0.10497 -2.9752 0.0029278 ** </span>
+<span class="co">#&gt; smokingTRUE       -0.15390    0.27265 -0.5645 0.5724365    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
+<p>One can compare the result with the one from <code>glm</code> fitted on <code>int</code>, which has higher standard errors on its estimations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(cancer <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(sex <span class="op">==</span><span class="st">&quot;F&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age<span class="op">&gt;</span><span class="dv">40</span>) <span class="op">+</span>snp <span class="op">+</span><span class="st"> </span>smoking, 
+            <span class="st">&quot;binomial&quot;</span>, int)
+<span class="kw">summary</span>(fit0)<span class="op">$</span>coef
+<span class="co">#&gt;                     Estimate Std. Error    z value    Pr(&gt;|z|)</span>
+<span class="co">#&gt; (Intercept)        0.4469066  0.2417339  1.8487546 0.064493257</span>
+<span class="co">#&gt; I(sex == &quot;F&quot;)TRUE  0.4094388  0.2636631  1.5528865 0.120450258</span>
+<span class="co">#&gt; I(age &gt; 40)TRUE    0.6681712  0.2526914  2.6442180 0.008187991</span>
+<span class="co">#&gt; snp               -0.2303803  0.1784850 -1.2907543 0.196788903</span>
+<span class="co">#&gt; smokingTRUE       -0.1550470  0.2727146 -0.5685323 0.569673562</span></code></pre></div>
+<p>The following table compares models fitted on internal and external datasets:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th></th>
+<th></th>
+<th>External</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td><strong>Internal</strong></td>
+<td><strong>model 1</strong></td>
+<td><strong>model 2</strong></td>
+<td><strong>model 3</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Sex</strong></td>
+<td><code>I(sex == 'F')</code></td>
+<td><code>I(sex == 'M')</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Age</strong></td>
+<td><code>I(age &gt; 40)</code></td>
+<td></td>
+<td><code>I(age &lt; 30)</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td><code>I(age &gt; 50)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>SNP</strong></td>
+<td><code>snp</code></td>
+<td></td>
+<td></td>
+<td><code>I(snp == 0)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Smoking</strong></td>
+<td><code>smoking</code></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>In this example, we used the feature in <code>gim</code> that supports flexible formula. One can, however, create variable instead using such a feature. For example, we can add columns to <code>int</code> as follows. Exactly the same result would be returned.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">int<span class="op">$</span>sex_F &lt;-<span class="st"> </span><span class="kw">ifelse</span>(int<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;F&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+int<span class="op">$</span>age_gt_<span class="dv">40</span> &lt;-<span class="st"> </span><span class="kw">ifelse</span>(int<span class="op">$</span>age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+fit2 &lt;-<span class="st"> </span><span class="kw">gim</span>(cancer <span class="op">~</span><span class="st"> </span>sex_F <span class="op">+</span><span class="st"> </span>age_gt_<span class="dv">40</span> <span class="op">+</span><span class="st"> </span>snp <span class="op">+</span><span class="st"> </span>smoking, 
+            <span class="st">&quot;case-control&quot;</span>, int, model, 
+            <span class="dt">ncase =</span> ncase, <span class="dt">nctrl =</span> nctrl)
+<span class="kw">summary</span>(fit2)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; gim.default(formula = cancer ~ sex_F + age_gt_40 + snp + smoking, </span>
+<span class="co">#&gt;     family = &quot;case-control&quot;, data = int, model = model, ncase = ncase, </span>
+<span class="co">#&gt;     nctrl = nctrl)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;             Estimate Std. Error z value  Pr(&gt;|z|)    </span>
+<span class="co">#&gt; (Intercept) -0.23729    0.15403 -1.5405 0.1234325    </span>
+<span class="co">#&gt; sex_F        0.55741    0.14218  3.9204 8.839e-05 ***</span>
+<span class="co">#&gt; age_gt_40    0.67326    0.20335  3.3109 0.0009301 ***</span>
+<span class="co">#&gt; snp         -0.31230    0.10497 -2.9752 0.0029278 ** </span>
+<span class="co">#&gt; smokingTRUE -0.15390    0.27265 -0.5645 0.5724365    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
+<p>The list <code>model</code> may looks complicated. For example,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model[[<span class="dv">1</span>]]
+<span class="co">#&gt; $formula</span>
+<span class="co">#&gt; [1] &quot;cancer ~sex&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $info</span>
+<span class="co">#&gt;       var        bet</span>
+<span class="co">#&gt; sexM sexM -0.5983149</span></code></pre></div>
+<p>So where does the <code>sexM</code> come from? It is because that <code>gim</code> parses <code>model[[1]]$formula</code> and automatically creates a dummy variable for <code>I(sex == &quot;M&quot;)</code>. <code>R</code> names such a dummy variable to be <code>sexM</code>, and in this example, we put this name to <code>model[[1]]$info$var</code>. As long as <code>sex</code> could be found in <code>int</code>, <code>gim</code> is able to define a dummy variable <code>sexM</code> itself and move everything forward smoothly. We can, however, use a more straight way to invoke <code>gim</code>. For example, we add a column <code>dummy_sex</code> to <code>int</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">int<span class="op">$</span>dummy_sex &lt;-<span class="st"> </span><span class="kw">ifelse</span>(int<span class="op">$</span>sex <span class="op">==</span><span class="st"> &quot;M&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)
+model1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">formula =</span> <span class="st">'cancer ~ dummy_sex'</span>, 
+               <span class="dt">info =</span> <span class="kw">data.frame</span>(<span class="dt">var =</span> <span class="st">'dummy_sex'</span>, 
+                                 <span class="dt">bet =</span> <span class="kw">coef</span>(m1)[<span class="op">-</span><span class="dv">1</span>], <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>))
+model1
+<span class="co">#&gt; $formula</span>
+<span class="co">#&gt; [1] &quot;cancer ~ dummy_sex&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $info</span>
+<span class="co">#&gt;            var        bet</span>
+<span class="co">#&gt; sexM dummy_sex -0.5983149</span>
+model &lt;-<span class="st"> </span><span class="kw">list</span>(model1, model2, model3)
+fit3 &lt;-<span class="st"> </span><span class="kw">gim</span>(cancer <span class="op">~</span><span class="st"> </span><span class="kw">I</span>(sex <span class="op">==</span><span class="st"> &quot;F&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(age <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">+</span><span class="st"> </span>snp <span class="op">+</span><span class="st"> </span>smoking, 
+            <span class="st">&quot;case-control&quot;</span>, int, model, 
+            <span class="dt">ncase =</span> ncase, <span class="dt">nctrl =</span> nctrl)
+<span class="kw">summary</span>(fit3)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; gim.default(formula = cancer ~ I(sex == &quot;F&quot;) + I(age &gt; 40) + </span>
+<span class="co">#&gt;     snp + smoking, family = &quot;case-control&quot;, data = int, model = model, </span>
+<span class="co">#&gt;     ncase = ncase, nctrl = nctrl)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;                   Estimate Std. Error z value  Pr(&gt;|z|)    </span>
+<span class="co">#&gt; (Intercept)       -0.23729    0.15403 -1.5405 0.1234325    </span>
+<span class="co">#&gt; I(sex == &quot;F&quot;)TRUE  0.55741    0.14218  3.9204 8.839e-05 ***</span>
+<span class="co">#&gt; I(age &gt; 40)TRUE    0.67326    0.20335  3.3109 0.0009301 ***</span>
+<span class="co">#&gt; snp               -0.31230    0.10497 -2.9752 0.0029278 ** </span>
+<span class="co">#&gt; smokingTRUE       -0.15390    0.27265 -0.5645 0.5724365    </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre></div>
+<p>The result is still the same. Note that row name in <code>model[[1]]$info</code> does not matter.</p>
+<p>This example illustrates several features of <code>gim</code>:</p>
+<ul>
+<li>flexible support on formula</li>
+<li>capability to work with partial extenrnal information</li>
+<li>account for variation due to sample overlapping through <code>nsample</code> or <code>ncase</code>, <code>nctrl</code></li>
+</ul>
+<p><code>gim</code> also provides generic accessor functions <code>coef</code>, <code>confint</code> and <code>vcov</code> for extract information from its returned object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(fit1)
+<span class="co">#&gt;       (Intercept) I(sex == &quot;F&quot;)TRUE   I(age &gt; 40)TRUE               snp </span>
+<span class="co">#&gt;        -0.2372865         0.5574127         0.6732635        -0.3123015 </span>
+<span class="co">#&gt;       smokingTRUE </span>
+<span class="co">#&gt;        -0.1539044</span>
+<span class="kw">confint</span>(fit1, <span class="dt">level =</span> <span class="fl">0.9</span>)
+<span class="co">#&gt;                          5 %        95 %</span>
+<span class="co">#&gt; (Intercept)       -0.4906427  0.01606971</span>
+<span class="co">#&gt; I(sex == &quot;F&quot;)TRUE  0.3235451  0.79128019</span>
+<span class="co">#&gt; I(age &gt; 40)TRUE    0.3387818  1.00774520</span>
+<span class="co">#&gt; snp               -0.4849581 -0.13964487</span>
+<span class="co">#&gt; smokingTRUE       -0.6023813  0.29457241</span>
+<span class="kw">all</span>(<span class="kw">diag</span>(<span class="kw">vcov</span>(fit1))<span class="op">^</span>.<span class="dv">5</span> <span class="op">==</span><span class="st"> </span><span class="kw">summary</span>(fit1)<span class="op">$</span>coef[, <span class="dv">2</span>])
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

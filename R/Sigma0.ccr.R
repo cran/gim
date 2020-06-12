@@ -1,6 +1,6 @@
 
 # return optimal Sigma0, the covariance of auxiliary information
-Sigma0.cc <- function(para, map, ref, model, sample.info, pr0, Delta, outcome){
+Sigma0.ccr <- function(para, map, ref, model, sample.info, pr0, Delta, outcome){
   
   #message('Estimating optimal covariance for auxiliary information...')
   
@@ -32,7 +32,7 @@ Sigma0.cc <- function(para, map, ref, model, sample.info, pr0, Delta, outcome){
     
     for(j in i:nmodel){
       
-      id.j <- c(alp.index.lo(map, j), map$bet[[j]])
+      id.j <- c(alp.index.cc(map, j), map$bet[[j]])
       gam <- para[id.j]
       
       rx.j <- as.matrix(ref[, names(gam), drop = FALSE])

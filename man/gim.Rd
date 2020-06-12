@@ -67,7 +67,7 @@ By default, \code{ref} is \code{NULL} if it is not specified explicitly. This as
 \value{
 \code{gim} returns an object of class "\code{gim}". The function \code{\link[base]{summary}} can be used to print a summary of the results. We will support the use of \code{\link[stats]{anova}} in later versions. 
 
-The generic accessor functions \code{\link[stats]{coefficients}}, \code{\link[stats]{confint}}, and \code{\link[stats]{vcov}} can be used to extract coefficients, confidence intervals, and variance-covariance of estimates from the object returned by \code{gim}. 
+The generic accessor functions \code{\link[stats]{coef}}, \code{\link[stats]{confint}}, and \code{\link[stats]{vcov}} can be used to extract coefficients, confidence intervals, and variance-covariance of estimates from the object returned by \code{gim}. 
 
 An object of class "\code{gim}" is a list containing the following components:
   \item{coefficients }{a named vector of coefficients}
@@ -78,7 +78,7 @@ An object of class "\code{gim}" is a list containing the following components:
 %% ...
 }
 \references{
-Zhang, H., Deng, L., Schiffman, M., Qin, J., Yu, K. (2018) Generalized integration model for improved statistical inference by leveraging external summary data. Under review. 
+Zhang, H., Deng, L., Schiffman, M., Qin, J., Yu, K. (2020) Generalized integration model for improved statistical inference by leveraging external summary data. Biometrika. asaa014, https://doi.org/10.1093/biomet/asaa014
 }
 \author{
 Han Zhang

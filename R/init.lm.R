@@ -6,12 +6,12 @@
 # para := c(lam, the, alp, bet)
 # bet0 := summary statistics to be used in quadratic form
 
-## formula: full model (internal data)
+## fit0: fitted full model (internal data)
 ## data: internal data
 ## model: working model and summary data
 ## nsample: overlapped sample size
 
-init.lm <- function(formula, data, model, nsample){
+init.lm <- function(fit0, data, model, nsample){
   
   #message('Initializing integration analysis...')
   
@@ -22,7 +22,7 @@ init.lm <- function(formula, data, model, nsample){
   
   nsample <- as.matrix(nsample)
   
-  fit0 <- glm(formula, data = data, family = 'gaussian')
+  #fit0 <- glm(formula, data = data, family = 'gaussian')
   the <- c(mean(fit0$residuals^2), coef(fit0))
   names(the)[1] <- 'sigma'
   
@@ -42,7 +42,8 @@ init.lm <- function(formula, data, model, nsample){
   for(i in 1:nmodel){
     
     form <- model[[i]][[1]]
-    fit <- lm(form, data = data)
+    #fit <- lm(form, data = data)
+    fit <- model[[i]][[4]]
     alp.var <- model[[i]][[2]] # nuisance variables in working model
     bet.var <- as.character(model[[i]][[3]]$var)
     N <- diag(nsample)[i] # sample size for working model
@@ -50,7 +51,7 @@ init.lm <- function(formula, data, model, nsample){
     # from v0.22.0, we do not estimate tau so alp could be NULL
     #tau <- c(tau, summary(fit)$sigma^2)
     tau <- c(tau, mean(fit$residuals^2))
-    if(!is.null(alp.var)){
+    if(length(alp.var) > 0){
       alp0 <- coef(fit)[alp.var]
     }else{
       alp0 <- NULL
@@ -66,7 +67,7 @@ init.lm <- function(formula, data, model, nsample){
     if(!is.null(alp0)){
       map$alp[[i + 1]] <- max(map$alp[[i]]) + 1:length(alp0)
     }else{
-      map$alp[[i + 1]] <- max(map$alp[[i]])
+      map$alp[[i + 1]] <- map$alp[[i]]
       no.alp <- c(no.alp, i)
     }
     

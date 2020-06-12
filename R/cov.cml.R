@@ -1,7 +1,9 @@
 
 
-cov.cc <- function(para, map, data, ref, sample.info, V, bet0, outcome){
+cov.cml <- function(para, map, data, ref, sample.info, V, bet0, outcome){
   
+  para[map$all.bet] <- bet0
+  names(para)[map$all.bet] <- names(bet0)
   Jv0 <- -hess.cc(para, map, data, ref, solve(V), bet0, sample.info, outcome)
   
   n <- nrow(data)
@@ -15,7 +17,11 @@ cov.cc <- function(para, map, data, ref, sample.info, V, bet0, outcome){
   Iv0[map$all.bet, map$all.bet] <- Jv0[map$all.bet, map$all.bet]
   v <- Jv0[, map$lam[1]]
   Iv0 <- Iv0 - 1/n * n1/n * n0/n * v %*% t(v)
-  vcov0 <- solve(Jv0) %*% Iv0 %*% solve(Jv0)
+  
+  id <- c(map$lam, map$the, map$all.alp)
+  mat <- Iv0[id, id] + Jv0[id, map$all.bet] %*% V %*% Jv0[map$all.bet, id]
+  
+  vcov0 <- solve(Jv0[id, id]) %*% mat %*% solve(Jv0[id, id])
   
   vcov0
   

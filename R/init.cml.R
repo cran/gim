@@ -8,7 +8,7 @@
 # pr0 := empirical distribution of controls, computed from internal data
 # Delta := exp(X * gam), X is augmented design matrix, and pr0 = 1/(1+n1/n0 * Delta)/n0
 
-init.cc <- function(fit0, data, model, ncase, nctrl, outcome){
+init.cml <- function(fit0, data, model, ncase, nctrl, outcome){
   
   #message('Initializing integration analysis...')
   
@@ -70,12 +70,11 @@ init.cc <- function(fit0, data, model, ncase, nctrl, outcome){
       alp0 <- NULL
     }
     
-    meta.bet <- (n * coef(fit)[bet.var] + N * model[[i]][[3]]$bet) / (n + N)
-    #meta.bet <- model[[i]][[3]]$bet
-    names(meta.bet) <- model[[i]][[3]]$var
     alp <- c(alp, alp0)
-    bet <- c(bet, meta.bet)
-    bet0 <- c(bet0, model[[i]][[3]]$bet)
+    tmp <- model[[i]][[3]]$bet
+    names(tmp) <- bet.var
+    bet <- c(bet, tmp)
+    bet0 <- c(bet0, tmp)
     
     if(!is.null(alp0)){
       map$alp[[i + 1]] <- max(map$alp[[i]]) + 1:length(alp0)
@@ -84,9 +83,9 @@ init.cc <- function(fit0, data, model, ncase, nctrl, outcome){
       no.alp <- c(no.alp, i)
     }
     
-    map$bet[[i + 1]] <- max(map$bet[[i]]) + 1:length(meta.bet)
+    map$bet[[i + 1]] <- max(map$bet[[i]]) + 1:length(model[[i]][[3]]$bet)
     
-    rm(form, fit, alp.var, bet.var, N, alp0, meta.bet)
+    rm(form, fit, alp.var, bet.var, N, alp0)
   }
   
   map$alp[[1]] <- NULL
@@ -122,6 +121,7 @@ init.cc <- function(fit0, data, model, ncase, nctrl, outcome){
   }
   
   map$all.bet <- sort(unique(all.bet))
+  para <- para[-map$all.bet]
   
   list(para = para, map = map, bet0 = bet0, 
        sample.info = list(ncase = ncase, nctrl = nctrl), 
